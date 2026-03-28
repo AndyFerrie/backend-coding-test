@@ -1,11 +1,13 @@
-const path = require("path")
-const { loadJsonFiles } = require("../src/dataLoader")
+import path from "path"
+import { loadJsonFiles } from "../src/dataLoader"
 
 const FIXTURES = path.join(__dirname, "fixtures")
 
 describe("loadJsonFiles", () => {
     it("loads and merges records from valid JSON files", () => {
-        const companies = loadJsonFiles(path.join(FIXTURES, "companies"))
+        const companies = loadJsonFiles(
+            path.join(FIXTURES, "companies"),
+        ) as Array<{ name: string }>
         expect(companies).toHaveLength(2)
         expect(companies[0].name).toBe("Acme Corp")
     })
