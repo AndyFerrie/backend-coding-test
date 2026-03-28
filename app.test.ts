@@ -150,6 +150,11 @@ describe("GET /companies", () => {
             expect(res.body.data).toEqual([])
             expect(res.body.pagination.total).toBe(0)
         })
+
+        it("returns 400 for an invalid active value", async () => {
+            const res = await request(app).get("/companies?active=invalid")
+            expect(res.statusCode).toEqual(400)
+        })
     })
 })
 

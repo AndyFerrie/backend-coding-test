@@ -30,6 +30,15 @@ app.get("/companies", (req, res) => {
         req.query.employeeName as string | undefined
     )?.toLowerCase()
 
+    if (
+        activeFilter !== undefined &&
+        activeFilter !== "true" &&
+        activeFilter !== "false"
+    ) {
+        res.status(400).json({ error: 'active must be "true" or "false"' })
+        return
+    }
+
     const employees: Employee[] = []
     for (const record of loadJsonFiles(EMPLOYEES_DIR)) {
         const result = EmployeeSchema.safeParse(record)
