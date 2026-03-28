@@ -17,10 +17,15 @@ app.get("/companies", (req, res) => {
     const limit = parseInt((req.query.limit as string) ?? "20", 10)
     const offset = parseInt((req.query.offset as string) ?? "0", 10)
 
-    if (isNaN(limit) || limit < 0 || isNaN(offset) || offset < 0) {
-        res.status(400).json({
-            error: "limit and offset must be non-negative integers",
-        })
+    const paginationErrors: string[] = []
+    if (isNaN(limit) || limit < 1) {
+        paginationErrors.push("limit must be a positive integer")
+    }
+    if (isNaN(offset) || offset < 0) {
+        paginationErrors.push("offset must be a non-negative integer")
+    }
+    if (paginationErrors.length > 0) {
+        res.status(400).json({ error: paginationErrors.join("; ") })
         return
     }
 

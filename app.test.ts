@@ -86,11 +86,27 @@ describe("GET /companies", () => {
     it("returns 400 for an invalid limit", async () => {
         const res = await request(app).get("/companies?limit=abc")
         expect(res.statusCode).toEqual(400)
+        expect(res.body.error).toBe("limit must be a positive integer")
+    })
+
+    it("returns 400 for limit=0", async () => {
+        const res = await request(app).get("/companies?limit=0")
+        expect(res.statusCode).toEqual(400)
+        expect(res.body.error).toBe("limit must be a positive integer")
     })
 
     it("returns 400 for a negative offset", async () => {
         const res = await request(app).get("/companies?offset=-1")
         expect(res.statusCode).toEqual(400)
+        expect(res.body.error).toBe("offset must be a non-negative integer")
+    })
+
+    it("returns 400 with both errors when limit and offset are invalid", async () => {
+        const res = await request(app).get("/companies?limit=0&offset=-1")
+        expect(res.statusCode).toEqual(400)
+        expect(res.body.error).toBe(
+            "limit must be a positive integer; offset must be a non-negative integer",
+        )
     })
 
     describe("filtering", () => {
