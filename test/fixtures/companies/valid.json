@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Acme Corp",
+        "industry": "Technology",
+        "active": true,
+        "website": "http://acme.com",
+        "telephone": "123-456-7890",
+        "slogan": "We make everything",
+        "address": "1 Acme Way",
+        "city": "Springfield",
+        "country": "United States"
+    },
+    {
+        "id": 2,
+        "name": "Globex",
+        "industry": "Energy",
+        "active": false,
+        "website": "http://globex.com",
+        "telephone": "098-765-4321",
+        "slogan": "A world of energy",
+        "address": "2 Globex Ave",
+        "city": "Shelbyville",
+        "country": "United States"
+    }
+]
