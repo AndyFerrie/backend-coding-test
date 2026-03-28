@@ -23,5 +23,10 @@ export const EmployeeSchema = z.object({
     company_id: z.number().int().nullable().optional(),
 })
 
+export const CompanyWithEmployeesSchema = CompanySchema.extend({
+    employees: z.array(EmployeeSchema),
+})
+
 export type Company = z.infer<typeof CompanySchema>
 export type Employee = z.infer<typeof EmployeeSchema>
+export type CompanyWithEmployees = z.infer<typeof CompanyWithEmployeesSchema>
