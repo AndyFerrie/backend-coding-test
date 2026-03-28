@@ -96,4 +96,52 @@ app.get("/companies", (req, res) => {
     res.json({ data: page, pagination: { total, limit, offset } })
 })
 
+app.get("/companies/:id", (req, res) => {
+    const id = parseInt(req.params.id, 10)
+
+    if (isNaN(id)) {
+        res.status(400).json({ error: "id must be an integer" })
+        return
+    }
+
+    const employees: Employee[] = []
+    for (const record of loadJsonFiles(EMPLOYEES_DIR)) {
+        const result = EmployeeSchema.safeParse(record)
+        if (result.success) {
+            employees.push(result.data)
+        } else {
+            const recordId =
+                (record as Record<string, unknown>)?.id ?? "unknown"
+            console.warn(
+                `Skipping invalid employee record (id: ${recordId}):`,
+                result.error.issues,
+            )
+        }
+    }
+
+    for (const record of loadJsonFiles(COMPANIES_DIR)) {
+        const result = CompanySchema.safeParse(record)
+        if (!result.success) {
+            const recordId =
+                (record as Record<string, unknown>)?.id ?? "unknown"
+            console.warn(
+                `Skipping invalid company record (id: ${recordId}):`,
+                result.error.issues,
+            )
+            continue
+        }
+        if (result.data.id === id) {
+            res.json({
+                ...result.data,
+                employees: employees.filter(
+                    (employee) => employee.company_id === result.data.id,
+                ),
+            })
+            return
+        }
+    }
+
+    res.status(404).json({ error: `Company with id ${id} not found` })
+})
+
 export default app

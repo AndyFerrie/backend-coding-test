@@ -152,3 +152,34 @@ describe("GET /companies", () => {
         })
     })
 })
+
+describe("GET /companies/:id", () => {
+    it("returns 200 with a single company matching the schema", async () => {
+        const allRes = await request(app).get("/companies")
+        const firstId: number = allRes.body.data[0].id
+
+        const res = await request(app).get(`/companies/${firstId}`)
+        expect(res.statusCode).toEqual(200)
+        const result = CompanyWithEmployeesSchema.safeParse(res.body)
+        expect(result.success).toBe(true)
+    })
+
+    it("returns the correct company for the given id", async () => {
+        const allRes = await request(app).get("/companies")
+        const firstCompany = allRes.body.data[0]
+
+        const res = await request(app).get(`/companies/${firstCompany.id}`)
+        expect(res.body.id).toEqual(firstCompany.id)
+        expect(res.body.name).toEqual(firstCompany.name)
+    })
+
+    it("returns 404 when the company does not exist", async () => {
+        const res = await request(app).get("/companies/999999")
+        expect(res.statusCode).toEqual(404)
+    })
+
+    it("returns 400 for a non-integer id", async () => {
+        const res = await request(app).get("/companies/abc")
+        expect(res.statusCode).toEqual(400)
+    })
+})
