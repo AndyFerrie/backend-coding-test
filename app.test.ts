@@ -92,4 +92,63 @@ describe("GET /companies", () => {
         const res = await request(app).get("/companies?offset=-1")
         expect(res.statusCode).toEqual(400)
     })
+
+    describe("filtering", () => {
+        it("filters by company name (case-insensitive)", async () => {
+            const allRes = await request(app).get("/companies")
+            const firstName: string = allRes.body.data[0].name
+            const partial = firstName.slice(0, 3).toLowerCase()
+
+            const res = await request(app).get(`/companies?name=${partial}`)
+            expect(res.body.data.length).toBeGreaterThan(0)
+            for (const company of res.body.data) {
+                expect(company.name.toLowerCase()).toContain(partial)
+            }
+        })
+
+        it("filters by active status true", async () => {
+            const res = await request(app).get("/companies?active=true")
+            expect(res.body.data.length).toBeGreaterThan(0)
+            for (const company of res.body.data) {
+                expect(company.active).toBe(true)
+            }
+        })
+
+        it("filters by active status false", async () => {
+            const res = await request(app).get("/companies?active=false")
+            for (const company of res.body.data) {
+                expect(company.active).toBe(false)
+            }
+        })
+
+        it("filters by employee name (case-insensitive)", async () => {
+            const allRes = await request(app).get("/companies")
+            const companyWithEmployees = allRes.body.data.find(
+                (company: { employees: unknown[] }) =>
+                    company.employees.length > 0,
+            )
+            const firstName: string =
+                companyWithEmployees.employees[0].first_name
+            const partial = firstName.slice(0, 3).toLowerCase()
+
+            const res = await request(app).get(
+                `/companies?employeeName=${partial}`,
+            )
+            expect(res.body.data.length).toBeGreaterThan(0)
+            for (const company of res.body.data) {
+                const match = company.employees.some(
+                    (employee: { first_name: string; last_name: string }) =>
+                        employee.first_name.toLowerCase().includes(partial) ||
+                        employee.last_name.toLowerCase().includes(partial),
+                )
+                expect(match).toBe(true)
+            }
+        })
+
+        it("returns empty data array when no companies match the name filter", async () => {
+            const res = await request(app).get("/companies?name=zzznomatch")
+            expect(res.body.data).toEqual([])
+            expect(res.body.pagination.total).toBe(0)
+        })
+    })
 })

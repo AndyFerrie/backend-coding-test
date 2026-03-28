@@ -24,6 +24,12 @@ app.get("/companies", (req, res) => {
         return
     }
 
+    const nameFilter = (req.query.name as string | undefined)?.toLowerCase()
+    const activeFilter = req.query.active as string | undefined
+    const employeeNameFilter = (
+        req.query.employeeName as string | undefined
+    )?.toLowerCase()
+
     const employees: Employee[] = []
     for (const record of loadJsonFiles(EMPLOYEES_DIR)) {
         const result = EmployeeSchema.safeParse(record)
@@ -57,8 +63,35 @@ app.get("/companies", (req, res) => {
         })
     }
 
-    const total = companies.length
-    const page = companies.slice(offset, offset + limit)
+    let filtered = companies
+
+    if (nameFilter !== undefined) {
+        filtered = filtered.filter((company) =>
+            company.name.toLowerCase().includes(nameFilter),
+        )
+    }
+
+    if (activeFilter !== undefined) {
+        const activeBool = activeFilter === "true"
+        filtered = filtered.filter((company) => company.active === activeBool)
+    }
+
+    if (employeeNameFilter !== undefined) {
+        filtered = filtered.filter((company) =>
+            company.employees.some(
+                (employee) =>
+                    employee.first_name
+                        .toLowerCase()
+                        .includes(employeeNameFilter) ||
+                    employee.last_name
+                        .toLowerCase()
+                        .includes(employeeNameFilter),
+            ),
+        )
+    }
+
+    const total = filtered.length
+    const page = filtered.slice(offset, offset + limit)
 
     res.json({ data: page, pagination: { total, limit, offset } })
 })
