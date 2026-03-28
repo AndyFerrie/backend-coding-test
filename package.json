@@ -2,6 +2,7 @@
     "name": "companies-api",
     "version": "1.0.0",
     "scripts": {
+        "start": "ts-node server.ts",
         "test": "jest"
     },
     "engines": {
@@ -19,6 +20,7 @@
         "jest": "^30.3.0",
         "supertest": "^7.2.2",
         "ts-jest": "^29.4.6",
+        "ts-node": "^10.9.2",
         "typescript": "^5.9.3"
     }
 }
