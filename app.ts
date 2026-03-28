@@ -14,6 +14,16 @@ const COMPANIES_DIR = path.join(__dirname, "data", "companies")
 const EMPLOYEES_DIR = path.join(__dirname, "data", "employees")
 
 app.get("/companies", (req, res) => {
+    const limit = parseInt((req.query.limit as string) ?? "20", 10)
+    const offset = parseInt((req.query.offset as string) ?? "0", 10)
+
+    if (isNaN(limit) || limit < 0 || isNaN(offset) || offset < 0) {
+        res.status(400).json({
+            error: "limit and offset must be non-negative integers",
+        })
+        return
+    }
+
     const employees: Employee[] = []
     for (const record of loadJsonFiles(EMPLOYEES_DIR)) {
         const result = EmployeeSchema.safeParse(record)
@@ -47,7 +57,10 @@ app.get("/companies", (req, res) => {
         })
     }
 
-    res.json(companies)
+    const total = companies.length
+    const page = companies.slice(offset, offset + limit)
+
+    res.json({ data: page, pagination: { total, limit, offset } })
 })
 
 export default app
