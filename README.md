@@ -40,6 +40,88 @@ Test files are located in the `tests/` directory and mirror the source structure
 - `data/` — JSON data files for companies and employees
 - `tests/` — Test files and fixtures
 
+## API Documentation
+
+### Base URL
+
+```
+http://localhost:3000
+```
+
+### Endpoints
+
+#### GET /companies
+
+Returns a paginated list of companies, with optional filters.
+
+**Query Parameters:**
+
+- `limit` (integer, default: 20) — Max number of companies to return (min: 1)
+- `offset` (integer, default: 0) — Number of companies to skip (min: 0)
+- `name` (string, optional) — Filter companies by name (case-insensitive substring match)
+- `active` (string, optional) — Filter by active status (`"true"` or `"false"`)
+- `employeeName` (string, optional) — Filter companies by employee first or last name (case-insensitive substring match)
+
+**Response:**
+
+```json
+{
+	"data": [
+		{
+			"id": 1,
+			"name": "Acme Corp",
+			"industry": "Manufacturing",
+			"active": true,
+			"website": "https://acme.com",
+			"telephone": "123-456-7890",
+			"slogan": "We build things",
+			"address": "123 Main St",
+			"city": "Metropolis",
+			"country": "USA",
+			"employees": [
+				{
+					"id": 101,
+					"first_name": "John",
+					"last_name": "Doe",
+					"email": "john.doe@acme.com",
+					"role": "Engineer",
+					"company_id": 1
+				}
+			]
+		}
+	],
+	"pagination": {
+		"total": 1,
+		"limit": 20,
+		"offset": 0
+	}
+}
+```
+
+**Error Responses:**
+
+- `400 Bad Request` — Invalid query parameters
+
+---
+
+#### GET /companies/:id
+
+Returns a single company by ID, including its employees.
+
+**Path Parameters:**
+
+- `id` (integer, required) — Company ID
+
+**Response:**
+Same as a single company object above, with an `employees` array.
+
+**Error Responses:**
+
+- `400 Bad Request` — Invalid ID
+- `404 Not Found` — Company not found
+
+---
+
 ## Notes
 
 - All business logic is in controllers.
