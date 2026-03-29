@@ -1,92 +1,47 @@
-# Coding Challenge: RESTful API
+# Backend Coding Test
 
-## Objective
+This project is a Node.js/Express API written in TypeScript. It provides endpoints for working with company and employee data, using file-based storage and Zod for schema validation.
 
-Develop a RESTful API with two endpoints to manage and retrieve company data.
+## Getting Started
 
-### Endpoints
+### Prerequisites
 
-1.  **GET /companies**
-    - Returns a list of companies in JSON format.
+- Node.js (v24.x required)
 
-2.  **GET /companies/{id}**
-    - Returns details of a single company in JSON format.
+### Install Dependencies
 
-### Data Structure
+```
+npm install
+```
 
-- **Company Data:**
-    - `id`: Integer
-    - `name`: String
-    - `industry`: String
-    - `active`: Boolean
-    - `website`: String
-    - `telephone`: String
-    - `slogan`: String
-    - `address`: String
-    - `city`: String
-    - `country`: String
-    - `employees`: Nested array (details below)
+## Running the Server
 
-- **Employee Data:**
-    - `id`: Integer
-    - `first_name`: String
-    - `last_name`: String
-    - `email`: String (optional)
-    - `role`: String
-    - `company_id`: Integer (reference to a company)
+To start the API server:
 
-### Data Source
+```
+npm start
+```
 
-- Data is stored in multiple JSON files. Responses could include data from any file.
-- Schemas for these files are located in the `data/schemas` folder.
-- Your solution should handle inconsistencies in data and invalid JSON files gracefully.
+The server will start on port 3000.
 
-### Endpoint Requirements
+## Running Tests
 
-#### GET /companies
+This project uses Jest for testing. To run all tests:
 
-**Should:**
+```
+npm test
+```
 
-- Return valid JSON with pagination metadata.
-- Return nested employee data if applicable.
-- Support `limit` and `offset` parameters for pagination.
-- Enable filtering by company name, active status, and employee name.
+Test files are located in the `tests/` directory and mirror the source structure.
 
-**Could:**
+## Project Structure
 
-- Support additional filters for future requirements.
-- Validate parameters for performance, security, and misuse prevention.
+- `src/` — Source code (controllers, routes, services, schemas, types)
+- `data/` — JSON data files for companies and employees
+- `tests/` — Test files and fixtures
 
-#### GET /companies/{id}
+## Notes
 
-**Should:**
-
-- Return logically structured and valid JSON for easy client consumption.
-
-**Could:**
-
-- Support returning multiple companies in one request.
-- Validate parameters for performance, security, and misuse prevention.
-
-### Implementation
-
-- Develop using Node.js.
-- Use modern JavaScript (ES6+) or TypeScript.
-- You may use frameworks or vanilla JS/TS as preferred.
-
-## Guidelines
-
-- Estimated duration: 3 hours.
-- Create a public Git repository and commit your code.
-- Submit the project by emailing the repository link.
-- Be prepared to discuss your solution.
-
-## Discussion Points
-
-Be ready to discuss the following aspects:
-
-- **Testing**: Unit, Integration, End-to-End tests.
-- **Architecture**: Deployment strategies, use of tools like Terraform, CloudFormation.
-- **Authentication**: Securing the API.
-- **Security**: Defending against malicious actors.
-- **Monitoring & Alerting**: Ensuring performance and reliability.
+- All business logic is in controllers.
+- Data loading is handled by services.
+- Validation is done with Zod schemas.
