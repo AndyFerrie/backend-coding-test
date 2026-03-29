@@ -2,7 +2,7 @@
     "name": "companies-api",
     "version": "1.0.0",
     "scripts": {
-        "start": "ts-node server.ts",
+        "start": "ts-node ./src/server.ts",
         "test": "jest"
     },
     "engines": {
