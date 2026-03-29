@@ -1,19 +1,15 @@
 import express from "express"
 import path from "path"
-import { loadJsonFiles } from "./src/dataLoader"
-import {
-    CompanySchema,
-    CompanyWithEmployees,
-    EmployeeSchema,
-    Employee,
-} from "./data/schemas/schemas"
+import { loadJsonFiles } from "../services/dataLoader"
+import { CompanySchema, EmployeeSchema } from "../schemas/schemas"
+import { CompanyWithEmployees, Employee } from "../types/companies"
 
-const app = express()
+const router = express.Router()
 
-const COMPANIES_DIR = path.join(__dirname, "data", "companies")
-const EMPLOYEES_DIR = path.join(__dirname, "data", "employees")
+const COMPANIES_DIR = path.join(__dirname, "../../data/companies")
+const EMPLOYEES_DIR = path.join(__dirname, "../../data/employees")
 
-app.get("/companies", (req, res) => {
+router.get("/", (req, res) => {
     const limit = parseInt((req.query.limit as string) ?? "20", 10)
     const offset = parseInt((req.query.offset as string) ?? "0", 10)
 
@@ -110,7 +106,7 @@ app.get("/companies", (req, res) => {
     res.json({ data: page, pagination: { total, limit, offset } })
 })
 
-app.get("/companies/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     const id = parseInt(req.params.id, 10)
 
     if (isNaN(id)) {
@@ -158,4 +154,4 @@ app.get("/companies/:id", (req, res) => {
     res.status(404).json({ error: `Company with id ${id} not found` })
 })
 
-export default app
+export default router

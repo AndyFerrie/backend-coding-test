@@ -1,5 +1,5 @@
 import path from "path"
-import { loadJsonFiles } from "../src/dataLoader"
+import { loadJsonFiles } from "../../../src/services/dataLoader"
 
 const FIXTURES = path.join(__dirname, "fixtures")
 

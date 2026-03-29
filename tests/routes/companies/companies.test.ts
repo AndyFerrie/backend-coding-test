@@ -1,7 +1,7 @@
 import request from "supertest"
-import app from "./app"
-import { CompanyWithEmployeesSchema } from "./data/schemas/schemas"
-import * as dataLoader from "./src/dataLoader"
+import app from "../../../src/app"
+import { CompanyWithEmployeesSchema } from "../../../src/schemas/schemas"
+import * as dataLoader from "../../../src/services/dataLoader"
 
 describe("GET /companies", () => {
     it("returns 200 with an array of companies", async () => {
